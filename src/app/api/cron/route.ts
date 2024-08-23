@@ -1,7 +1,7 @@
-// pages/api/cron.js
-import nodemailer from 'nodemailer';
+import { NextRequest, NextResponse } from 'next/server';
+import nodemailer from 'nodemailer'
 
-export default async function handler(req, res) {
+export async function POST(req: NextRequest) {
   // Configurar nodemailer
   const transporter = nodemailer.createTransport({
     service: 'gmail', // Puedes usar cualquier servicio de correo
@@ -22,9 +22,8 @@ export default async function handler(req, res) {
   // Enviar el correo
   try {
     await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: 'Correo enviado' });
+    return NextResponse.json({ message: 'Correo enviado con éxito' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error al enviar el correo' });
+    return NextResponse.json({ error: 'Error al enviar el correo' }, { status: 500 });
   }
 }
